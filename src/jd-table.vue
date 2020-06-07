@@ -21,13 +21,13 @@
 				</div>
 				</span>
 
-				<input v-show="feature.searching" @keyup.enter="performSearch" v-model="search.text" type="search" ref="searchField" :placeholder="setting.searchPlaceHolder ? setting.searchPlaceHolder : 'Search Here ..'" :disabled="status.processingData">
+				<input v-show="feature.searching" @keyup.enter="performSearch" v-model="search.text" type="search" ref="searchField" :placeholder="setting.searchPlaceHolder ? setting.searchPlaceHolder : 'Поиск ..'" :disabled="status.processingData">
 
-				<span v-show="feature.searching && !search.searching" @click="performSearch" class="jd-controlItem jd-search" title="Perform Search">
+				<span v-show="feature.searching && !search.searching" @click="performSearch" class="jd-controlItem jd-search" :title="tr['PerformSearch']">
 					<i  class="fas fa-angle-right"></i>
 				</span>
 
-				<span v-show="feature.searching && search.searching" @click="clearSearch" class="jd-controlItem jd-clearSearch" title="Clear Search">
+				<span v-show="feature.searching && search.searching" @click="clearSearch" class="jd-controlItem jd-clearSearch" :title="tr['ClearSearch']">
 					<i  class="fas fa-times-circle"></i>
 				</span>
 
@@ -38,27 +38,27 @@
 
 				<!-- Feature: Add New -->
 				<span v-if="setting.addNew" @click="featureAction('AddNew')" class="jd-controlItem">
-					<i class="fas fa-plus-square" title="Add New"></i>
+					<i class="fas fa-plus-square" :title="tr['AddNew']"></i>
 				</span>
 
 				<!-- Feature: Refresh -->
 				<span v-if="setting.refresh" @click="featureAction('Refresh')" class="jd-controlItem">
-					<i class="fas fa-sync-alt" title="Refresh"></i>
+					<i class="fas fa-sync-alt" :title="tr['Refresh']"></i>
 				</span>
 
 				<!-- Feature: Pagination Select -->
 				<span v-if="rendering.engine === 2" @click="featureAction('Pagination')" class="jd-controlItem" :class="rendering.pagination.changingRows ? 'jd-selected' : ''">
-					<i class="fas fa-scroll" title="Rows Per Page"></i>
+					<i class="fas fa-scroll" :title="tr['RowsPerPage']"></i>
 				</span>
 
 				<!-- Feature: Column Select -->
 				<span v-if="setting.columnSelect" @click="featureAction('Columns')" class="jd-controlItem" :class="columns.selecting ? 'jd-selected' : ''">
-					<i class="fas fa-columns" title="Columns"></i>
+					<i class="fas fa-columns" :title="tr['Columns']"></i>
 				</span>
 
 				<!-- Feature: Filter -->
 				<span v-if="setting.filter" @click="featureAction('Filter')" class="jd-controlItem" :class="controlFilterClasses">
-					<i class="fas fa-filter" title="Filter"></i>
+					<i class="fas fa-filter" :title="tr['Filter']"></i>
 
 					<!-- Control: Get Started with Filter Reminder -->
 					<div v-if="gettingStarted && setting.startBySearchArrowFilter && !menuVisible && !status.processingData && !loader" class="jd-filterArrow">
@@ -73,7 +73,7 @@
 
 				<!-- Feature: Export -->
 				<span v-if="setting.export" @click="featureAction('Export')" class="jd-controlItem">
-					<i class="fas fa-file-export" title="Export to Excel"></i>
+					<i class="fas fa-file-export" :title="tr['ExporttoExcel']"></i>
 				</span>
 
 				<!-- Feature: Maximize/Minimize -->
@@ -93,7 +93,7 @@
 				<div v-if="rendering.pagination.changingRows" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="jd-dropdownHeader">Page Rows</div>
+					<div class="jd-dropdownHeader">{{ tr['RowsPerPage'] }}</div>
 
 					<!-- Pagination Row List -->
 					<div v-for="rows in rendering.pagination.pageRowOptions" @click="changePageRows( rows )" class="jd-dropdownItem jd-paginationItem jd-clickable" :class="rendering.pagination.currentSelectedPageRowOption === rows ? 'jd-selected' : ''">
@@ -108,10 +108,10 @@
 				<div v-if="columns.selecting" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="jd-dropdownHeader">Columns</div>
+					<div class="jd-dropdownHeader">{{ tr['Columns'] }}</div>
 
 					<!-- Error -->
-					<div v-if="columns.selectionError" class="jd-errorMessage">You must have at least one column enabled.</div>
+					<div v-if="columns.selectionError" class="jd-errorMessage">Вы должны включить хотя бы один столбец.</div>
 
 					<!-- Column List -->
 					<div v-for="column in columns.list" @click="columnSelection( column )" class="jd-dropdownItem jd-clickable">
@@ -135,7 +135,7 @@
 				<div v-if="filters.show" class="jd-optionDropdown" :style="optionDropdownStyles">
 
 					<!-- Header -->
-					<div class="jd-dropdownHeader">Filtering</div>
+					<div class="jd-dropdownHeader">{{ tr['Filtering'] }}</div>
 
 					<!-- Error -->
 					<div v-if="filters.error" class="jd-errorMessage">{{ filters.errorText }}</div>
@@ -179,15 +179,15 @@
 
 					<!-- Filter Apply Buttons -->
 					<div class="jd-dropdownRow jd-separate">
-						<button v-on:click="clearAllFilters" type="button" class="jd-button jd-danger" title="Clear All Filters">Clear All</button>
-						<button v-on:click="addFilter" type="button" class="jd-button jd-success" title="Apply Filter">Apply</button>
+						<button v-on:click="clearAllFilters" type="button" class="jd-button jd-danger" :title="tr['ClearAllFilters']">{{ tr['Clear'] }}</button>
+						<button v-on:click="addFilter" type="button" class="jd-button jd-success" :title="tr['ApplyFilter']">{{ tr['Apply'] }}</button>
 					</div>
 
 					<!-- Header -->
-					<div class="jd-dropdownHeader jd-subHeader">Active Filters</div>
+					<div class="jd-dropdownHeader jd-subHeader">{{ tr['ActiveFilters'] }}</div>
 
 					<!-- Filtered Results -->
-					<div class="jd-dropdownHeader jd-smallHeader">Filtered Results: {{ formatNumberWithCommas ( processedDataSize ) }}</div>
+					<div class="jd-dropdownHeader jd-smallHeader">{{ tr['FilteredResults'] }}: {{ formatNumberWithCommas ( processedDataSize ) }}</div>
 
 					<!-- Active Filters -->
 					<div class="jd-dropdownInput jd-disabled" v-for="( filter, index ) in filters.active">
@@ -206,7 +206,7 @@
 							</span>
 						</div>
 
-						<i v-on:click="removeFilter( index )" class="fas fa-minus-circle jd-removeIcon jd-clickable" title="Remove Filter"></i>
+						<i v-on:click="removeFilter( index )" class="fas fa-minus-circle jd-removeIcon jd-clickable" :title="tr['RemoveFilter']"></i>
 					</div>
 
 				</div>
@@ -286,12 +286,12 @@
 
 			<div v-if="rendering.engine === 2 && processedDataSize" class="jd-pagination">
 				<div class="jd-paginationDirection jd-left" :class="rendering.pagination.currentPage === 1 ? 'jd-disabled' : ''">
-					<i @click="paginationFirst" class="fas fa-fast-backward jd-start" title="First Page"></i>
-					<i @click="paginationPrevious" class="fas fa-backward" title="Previous Page"></i>
+					<i @click="paginationFirst" class="fas fa-fast-backward jd-start" :title="tr['FirstPage']"></i>
+					<i @click="paginationPrevious" class="fas fa-backward" :title="tr['PreviousPage']"></i>
 				</div>
 
 				<div v-if="!status.mobileSize" class="jd-paginationRows">
-					Rows&nbsp;<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }} of&nbsp;</span>{{ formatNumberWithCommas( processedDataSize ) }}
+					{{ tr['Rows'] }}&nbsp;<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }} of&nbsp;</span>{{ formatNumberWithCommas( processedDataSize ) }}
 				</div>
 				<div v-else class="jd-paginationRows">
 					<span v-if="processedDataSize">{{ rendering.pagination.currentStartIndex + 1 }} - {{ rendering.pagination.currentEndIndex }}</span>
@@ -320,8 +320,8 @@
 				</div>
 
 				<div class="jd-paginationDirection jd-right" :class="rendering.pagination.currentPage === rendering.pagination.availablePages ? 'jd-disabled' : ''">
-					<i @click="paginationNext" class="fas fa-forward" title="Next Page"></i>
-					<i @click="paginationLast" class="fas fa-fast-forward jd-end" title="Last Page"></i>
+					<i @click="paginationNext" class="fas fa-forward" :title="tr['NextPage']"></i>
+					<i @click="paginationLast" class="fas fa-fast-forward jd-end" :title="tr['LastPage']"></i>
 				</div>
 
 			</div>
@@ -484,25 +484,25 @@
 					<li v-if="setting.contextMenuQuickView || setting.contextMenuView || setting.contextMenuEdit || setting.contextMenuDelete" class="jd-contextMenuHeader jd-noneSelectable">
 						<span>Row Options</span>
 					</li>
-					<li v-if="setting.contextMenuQuickView" @click="contextQuickView" class="jd-contextMenuOption jd-noneSelectable" title="Open Quick View">
+					<li v-if="setting.contextMenuQuickView" @click="contextQuickView" class="jd-contextMenuOption jd-noneSelectable" :title="tr['OpenQuickView']">
 						<span>Quick View</span>
 					</li>
 					<li v-if="setting.contextMenuView"  class="jd-contextMenuOption jd-noneSelectable">
-						<span @click="contextView(false)" title="View Record">View</span>
+						<span @click="contextView(false)" :title="tr['ViewRecord']">{{ tr['ViewRecord'] }}</span>
 						<span @click="contextView(true)" title="View (In New Window)"><i class="fas fa-external-link-alt"></i></span>
 					</li>
 					<li v-if="setting.contextMenuEdit" class="jd-contextMenuOption jd-noneSelectable">
-						<span @click="contextEdit(false)" title="Edit Record">Edit</span>
+						<span @click="contextEdit(false)" :title="tr['EditRecord']">{{ tr['EditRecord'] }}</span>
 						<span @click="contextEdit(true)" title="Edit (In New Window)"><i class="fas fa-external-link-alt"></i></span>
 					</li>
 					<li v-if="setting.contextMenuDelete" class="jd-contextMenuOption jd-noneSelectable">
-						<span @click="contextDelete" title="Delete Record">Delete</span>
+						<span @click="contextDelete" :title="tr['DeleteRecord']"> {{ tr['DeleteRecord'] }}</span>
 					</li>
 					<li v-if="setting.contextMenuAdd" class="jd-contextMenuHeader jd-noneSelectable">
 						<span>Table Options</span>
 					</li>
 					<li v-if="setting.contextMenuAdd" class="jd-contextMenuOption jd-noneSelectable">
-						<span @click="contextAdd(false)" title="Add Record">Add</span>
+						<span @click="contextAdd(false)" :title="tr['AddRecord']">Add</span>
 						<span @click="contextAdd(true)" title="Add (In New Window)"><i class="fas fa-external-link-alt"></i></span>
 					</li>
 				</ul>
@@ -519,6 +519,34 @@
 		data ()
 		{
 			return {
+				tr:{
+					Refresh: 'Обновить',
+					RowsPerPage: 'Строк на странице',
+					Columns: 'Настроить столбцы',
+					Filter: 'Фильтры',
+					ExporttoExcel:'Экспорт в Exel',
+					AddNew: 'Добавить',
+					ClearAllFilters: 'Сбросить фильтры',
+					ApplyFilter:'Добавить фильтр',
+					Clear: 'Сбросить',
+					Apply:'Добавить',
+					PerformSearch: 'Выполнить поиск',
+					ClearSearch: 'Очистить поиск',
+					ViewRecord: 'Посмотреть',
+					EditRecord: 'Редактировать',
+					DeleteRecord: 'Удалить',
+					AddRecord: 'Добавить',
+					OpenQuickView: 'Быстрый просмотр',
+					Filtering: 'Фильтрация',
+					RemoveFilter: 'Удалить фильтр',
+					ActiveFilters: 'Активные фильтры',
+					FilteredResults: 'Результат фильтрации',
+					Rows: 'Строк',
+					FirstPage: 'Первая страница',
+					PreviousPage: 'Предыдущая страница',
+					NextPage: 'Следующая страница',
+					LastPage: 'Последняя страница'
+				},
 				status :
 				{
 					tableError     : null,
@@ -1125,22 +1153,22 @@
 						{
 							if ( typeof( userColumn.name ) !== 'string' )
 							{
-								this.status.tableError = 'Error: Invalid settings. One of the defined columns does not have a name assigned.';
+								this.status.tableError = 'Ошибка: неверные настройки. Один из определенных столбцов не имеет назначенного name.';
 							}
 
 							if ( typeof( userColumn.title ) !== 'string' )
 							{
-								this.status.tableError = 'Error: Invalid settings. One of the defined columns does not have a title assigned.';
+								this.status.tableError = 'Ошибка: неверные настройки. Один из определенных столбцов не имеет назначенного title.';
 							}
 
 							if ( typeof( userColumn.order ) !== 'number' )
 							{
-								this.status.tableError = 'Error: Invalid settings. One of the defined columns does not have a order assigned.';
+								this.status.tableError = 'Ошибка: неверные настройки. Один из определенных столбцов не имеет назначенного order.';
 							}
 
 							if ( typeof( userColumn.type ) !== 'string' )
 							{
-								this.status.tableError = 'Error: Invalid settings. One of the defined columns does not have a type assigned.';
+								this.status.tableError = 'Ошибка: неверные настройки. Один из определенных столбцов не имеет назначенного типа type.';
 							}
 
 							// Set column width value.
@@ -1251,7 +1279,7 @@
 					}
 					else
 					{
-						this.status.tableError = 'Error: Invalid settings. Columns are not defined.'
+						this.status.tableError = 'Ошибка: неверные настройки. Столбцы не определены.'
 					}
 				};
 
@@ -1281,12 +1309,12 @@
 					// If the table should be responsive, but the sum of the widths is Greater/Equal To 100%. Throw an error.
 					if ( this.setting.responsiveTable && this.tableWidth !== null && this.tableWidth > 100 )
 					{
-						this.status.tableError =  'Error: Invalid settings. The sum of the individual column widths is greater then 100%. Ensure your columns are balanced.'
+						this.status.tableError =  'Ошибка: неверные настройки. Сумма ширины отдельных столбцов превышает 100%. Убедитесь, что ваши столбцы сбалансированы.'
 					}
 
 					if ( !this.setting.responsiveFrame && this.setting.frameWidth === null )
 					{
-						this.status.tableError =  'Error: Invalid settings. The setting frameWidth is not configured. In order to use responsiveTable = FALSE you must set a frameWidth. The frame will now operate @ 100% and not function correctly.'
+						this.status.tableError =  'Ошибка: неверные настройки. Параметр frameWidth не настроен. Чтобы использовать responseiveTable = FALSE, вы должны установить frameWidth. Рамка теперь будет работать при 100% и работать неправильно.'
 					}
 
 					// Set the column width for each column.
@@ -1323,7 +1351,7 @@
 							// If the table is NOT responsive throw an error. This is because column widths are in PX.
 							if ( !this.setting.responsiveTable )
 							{
-								this.status.tableError = 'Error: Invalid settings. One or more of the columns does not have an assigned width. When the setting responsiveTable is set to false, all columns must have a specified width. Rendering table as responsive instead.';
+								this.status.tableError = 'Ошибка: неверные настройки. Один или несколько столбцов не имеют назначенной ширины. Если для параметра responseiveTable установлено значение false, все столбцы должны иметь указанную ширину. Вместо этого отображается таблица как responsive.';
 							}
 
 							// Calculate the width out of the remaining percentage.
@@ -1383,7 +1411,7 @@
 					{
 						if ( this.setting.renderEngine === 0 )
 						{
-							this.status.tableError = 'Error: External data provider is only supported by the Pagination render engine. Please change your settings.';
+							this.status.tableError = 'Ошибка: внешний поставщик данных поддерживается только механизмом рендеринга Pagination. Пожалуйста, измените ваши настройки.';
 						}
 					}
 				};
@@ -1488,7 +1516,7 @@
 							}
 							else
 							{
-								this.status.tableError = 'Error: There was a problem validating a view configuration. Validate the JD-Table settings.';
+								this.status.tableError = 'Ошибка: возникла проблема при проверке конфигурации представления. Проверьте настройки JD-таблицы.';
 							}
 						});
 					}
@@ -2445,7 +2473,7 @@
 
 					if ( eventError )
 					{
-						this.status.tableError = 'Error: sendData event issue. Payload is null or improperly formatted.';
+						this.status.tableError = 'Ошибка: проблема события sendData. Полезная нагрузка нулевая или неправильно отформатирована.';
 					}
 				}
 
@@ -3641,10 +3669,10 @@
 
 				if ( this.columns.activeSortIndex === columnIndex && !this.columns.activeSortAsc )
 				{
-					return 'Sort Ascending'
+					return 'Сортировать по возрастанию'
 				}
 
-				return 'Sort Descending';
+				return 'Сортировать по убыванию';
 			},
 
 			// Changes the selected filter dropdown focus.
@@ -3728,34 +3756,34 @@
 				// Manage Data Availability.
 				if ( this.setting.dataProvider === 0 && this.data.length === 0 )
 				{
-					this.filters.errorText = 'There is no data available to filter.';
+					this.filters.errorText = 'Нет данных для фильтрации.';
 					this.filters.error = true;
 				}
 
 				// Manage column error.
 				if ( this.filters.beingBuilt.column === null || typeof( this.filters.beingBuilt.column ) !== 'object' )
 				{
-					this.filters.errorText = 'A column must be selected to add a filter.';
+					this.filters.errorText = 'Для добавления фильтра необходимо выбрать столбец.';
 					this.filters.error = true;
 				}
 
 				// Manage option error.
 				if ( this.filters.beingBuilt.option === null || typeof( this.filters.beingBuilt.option ) !== 'string' )
 				{
-					this.filters.errorText = 'A filter type must be selected to add a filter.';
+					this.filters.errorText = 'Для добавления фильтра необходимо выбрать тип фильтра.';
 					this.filters.error = true;
 				}
 				else
 				{
 					if ( this.filters.beingBuilt.option === 'Greater/Equal To' && isNaN( this.filters.beingBuilt.value ) )
 					{
-						this.filters.errorText = 'Value must be a number.';
+						this.filters.errorText = 'Значение должно быть числом.';
 						this.filters.error = true;
 					}
 
 					if ( this.filters.beingBuilt.option === 'Less/Equal To' && isNaN( this.filters.beingBuilt.value ) )
 					{
-						this.filters.errorText = 'Value must be a number.';
+						this.filters.errorText = 'Значение должно быть числом.';
 						this.filters.error = true;
 					}
 				}
@@ -3763,7 +3791,7 @@
 				// Manage value error.
 				if ( this.filters.beingBuilt.value === null || typeof( this.filters.beingBuilt.value ) !== 'string' )
 				{
-					this.filters.errorText = 'A filter value must be entered to add a filter.';
+					this.filters.errorText = 'Для добавления фильтра необходимо ввести значение фильтра.';
 					this.filters.error = true;
 				}
 
@@ -4221,7 +4249,7 @@
 			{
 				let contentToPrinter = this.$refs[elementRef].innerHTML;
 				let styles           = "<style>.contentRow { display : flex; flex-direction : column; width : 100%; } .rowTitle { display : flex; align-items : center; font-size : 1rem; font-weight : 600; word-break : break-all; padding : 0.5rem 1rem; } .rowData { display : flex; align-items : center;padding : 0.2rem 1rem; word-break : break-all; }</style>";
-				let printWindow      = window.open( '', 'Print', 'height=600, width=800');
+				let printWindow      = window.open( '', 'На печать', 'height=600, width=800');
 
 				printWindow.document.write('<html><head><title>Print</title>');
 				printWindow.document.write(styles);
@@ -4373,8 +4401,8 @@
 						startBySearchMessage         : null,
 						startBySearchArrowSearch     : false,
 						startBySearchArrowFilter     : false,
-						startBySearchArrowSearchText : 'Search Here',
-						startBySearchArrowFilterText : 'Filter by Column',
+						startBySearchArrowSearchText : 'Поиск',
+						startBySearchArrowFilterText : 'Фильтровать по столбцам',
 						maxMinimize                  : true,
 						refresh                      : true,
 						search                       : true,
@@ -4574,10 +4602,10 @@
 			{
 				if ( this.feature.searching )
 				{
-					return 'Hide Search';
+					return 'Скрыть поиск';
 				}
 
-				return 'Show Search';
+				return 'Показать поиск';
 			},
 
 			// Apply class to controlFeature based on settings.
@@ -4607,10 +4635,10 @@
 			{
 				if ( this.feature.maximized )
 				{
-					return 'Minimize';
+					return 'Минимизировать';
 				}
 
-				return 'Maximize';
+				return 'Максимизировать';
 			},
 
 			// Apply styles to layerContent based on settings.

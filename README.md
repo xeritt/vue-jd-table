@@ -1,4 +1,5 @@
 # JD-Table
+Руссифицированная версия.
 
 > An advanced and flexible Vue.js 2.x component for displaying data tables. Feature rich and capable of handling big data, JD-Table was designed to integrate into applications with various needs.
 
