@@ -174,7 +174,7 @@
 
 					<!-- Select Value Input -->
 					<div class="jd-dropdownInput jd-addPadding">
-						<input @keyup.enter="addFilter" ref="filterInput" type="text" @input="filters.error = false" v-model="filters.beingBuilt.value" placeholder="Value"/>
+						<input @keyup.enter="addFilter" ref="filterInput" type="text" @input="filters.error = false" v-model="filters.beingBuilt.value" :placeholder="tr['Value']"/>
 					</div>
 
 					<!-- Filter Apply Buttons -->
@@ -195,12 +195,12 @@
 							<span>
 								{{ filter.column.title.replace(/(<([^>]+)>)/ig,"") }}
 
-								<i v-if="filter.option === 'Equals To'" class="fas fa-equals"></i>
-								<i v-if="filter.option === 'Not Equals To'" class="fas fa-not-equal"></i>
-								<i v-if="filter.option === 'Greater/Equal To'" class="fas fa-greater-than-equal"></i>
-								<i v-if="filter.option === 'Less/Equal To'" class="fas fa-less-than-equal"></i>
-								<i v-if="filter.option === 'Contains'" class="fas fa-level-down-alt"></i>
-								<i v-if="filter.option === 'Begins With'" class="fas fa-long-arrow-alt-right"></i>
+								<i v-if="filter.option === 'Равно'" class="fas fa-equals"></i>
+								<i v-if="filter.option === 'Не равно'" class="fas fa-not-equal"></i>
+								<i v-if="filter.option === 'Больше / Равно'" class="fas fa-greater-than-equal"></i>
+								<i v-if="filter.option === 'Меньше / Равно'" class="fas fa-less-than-equal"></i>
+								<i v-if="filter.option === 'Содержит'" class="fas fa-level-down-alt"></i>
+								<i v-if="filter.option === 'Начинается с'" class="fas fa-long-arrow-alt-right"></i>
 
 								"{{ filter.value }}"
 							</span>
@@ -524,7 +524,7 @@
 					RowsPerPage: 'Строк на странице',
 					Columns: 'Настроить столбцы',
 					Filter: 'Фильтры',
-					ExporttoExcel:'Экспорт в Exel',
+					ExporttoExcel:'Экспорт в Exсel',
 					AddNew: 'Добавить',
 					ClearAllFilters: 'Сбросить фильтры',
 					ApplyFilter:'Добавить фильтр',
@@ -545,7 +545,8 @@
 					FirstPage: 'Первая страница',
 					PreviousPage: 'Предыдущая страница',
 					NextPage: 'Следующая страница',
-					LastPage: 'Последняя страница'
+					LastPage: 'Последняя страница',
+					Value: 'Значение'
 				},
 				status :
 				{
@@ -2283,12 +2284,12 @@
 									columnFilters.forEach( ( columnFilter ) =>
 									{
 										// Store greater then for
-										if ( columnFilter.option === 'Greater/Equal To' )
+										if ( columnFilter.option === 'Больше / Равно' )
 										{
 											greaterThanValue = columnFilter.value;
 										}
 
-										if ( columnFilter.option === 'Less/Equal To' )
+										if ( columnFilter.option === 'Меньше / Равно' )
 										{
 											lessThanValue = columnFilter.value;
 										}
@@ -2304,7 +2305,7 @@
 										columnFilters.forEach( ( columnFilter ) =>
 										{
 											// FILTER: Equals To
-											if ( columnFilter.option === 'Equals To' )
+											if ( columnFilter.option === 'Равно' )
 											{
 												if ( FILTER_EQUALS_TO( row, columnFilter ) )
 												{
@@ -2315,7 +2316,7 @@
 											}
 
 											// FILTER: Contains
-											if ( !hasBeenPushed && columnFilter.option === 'Contains' )
+											if ( !hasBeenPushed && columnFilter.option === 'Содержит' )
 											{
 												if ( FILTER_CONTAINS( row, columnFilter ) )
 												{
@@ -2326,7 +2327,7 @@
 											}
 
 											// FILTER: Not Equals To
-											if ( !hasBeenPushed && columnFilter.option === 'Not Equals To' )
+											if ( !hasBeenPushed && columnFilter.option === 'Не равно' )
 											{
 												if ( FILTER_NOT_EQUALS_TO( row, columnFilter ) )
 												{
@@ -2337,7 +2338,7 @@
 											}
 
 											// FILTER: Begins With
-											if ( !hasBeenPushed && columnFilter.option === 'Begins With' )
+											if ( !hasBeenPushed && columnFilter.option === 'Начинается с' )
 											{
 												if ( FILTER_BEGINS_WITH( row, columnFilter ) )
 												{
@@ -3775,13 +3776,13 @@
 				}
 				else
 				{
-					if ( this.filters.beingBuilt.option === 'Greater/Equal To' && isNaN( this.filters.beingBuilt.value ) )
+					if ( this.filters.beingBuilt.option === 'Больше / Равно' && isNaN( this.filters.beingBuilt.value ) )
 					{
 						this.filters.errorText = 'Значение должно быть числом.';
 						this.filters.error = true;
 					}
 
-					if ( this.filters.beingBuilt.option === 'Less/Equal To' && isNaN( this.filters.beingBuilt.value ) )
+					if ( this.filters.beingBuilt.option === 'Меньше / Равно' && isNaN( this.filters.beingBuilt.value ) )
 					{
 						this.filters.errorText = 'Значение должно быть числом.';
 						this.filters.error = true;
@@ -4863,30 +4864,30 @@
 				{
 					if ( this.setting.dataProvider === 1 )
 					{
-						return ['Equals To', 'Contains', 'Not Equals To'];
+						return ['Равно', 'Содержит', 'Не равно'];
 					}
 
-					return ['Equals To', 'Contains', 'Not Equals To', 'Begins With'];
+					return ['Равно', 'Содержит', 'Не равно', 'Начинается с'];
 				}
 
 				if ( this.filters.beingBuilt.column.type === 'Array' )
 				{
 					if ( this.setting.dataProvider === 1 )
 					{
-						return ['Contains'];
+						return ['Содержит'];
 					}
 
-					return ['Contains'];
+					return ['Содержит'];
 				}
 
 				if ( this.filters.beingBuilt.column.type === 'Number' )
 				{
 					if ( this.setting.dataProvider === 1 )
 					{
-						return ['Equals To', 'Greater/Equal To', 'Less/Equal To', 'Contains', 'Not Equals To'];
+						return ['Равно', 'Больше / Равно', 'Меньше / Равно', 'Содержит', 'Не равно'];
 					}
 
-					return ['Equals To', 'Greater/Equal To', 'Less/Equal To', 'Contains', 'Not Equals To', 'Begins With'];
+					return ['Равно', 'Больше / Равно', 'Меньше / Равно', 'Содержит', 'Не равно', 'Начинается с'];
 				}
 			},
 
@@ -4895,7 +4896,7 @@
 			{
 				if ( this.filters.beingBuilt.column === null )
 				{
-					return 'Select Column ..'
+					return 'Выберите столбец ..'
 				}
 
 				return this.filters.beingBuilt.column.title;
@@ -4906,12 +4907,12 @@
 			{
 				if ( this.filters.beingBuilt.column === null )
 				{
-					return 'Select Filter ..';
+					return 'Выберите фильтр ..';
 				}
 
 				if ( this.filters.beingBuilt.option === null )
 				{
-					return 'Filter ..'
+					return 'Фильтр ..'
 				}
 				else
 				{
