@@ -51,5 +51,7 @@
     "vue": "^2.5.22",
     "vue-template-compiler": "^2.5.22"
   },
-  "dependencies": {}
+  "dependencies": {
+    "xlsx": "^0.16.2"
+  }
 }

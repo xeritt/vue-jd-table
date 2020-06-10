@@ -513,6 +513,8 @@
 
 <script>
 	import download from "downloadjs";
+	import XLSX from 'xlsx'
+	
 	export default
 	{
 		name : 'JDTable',
@@ -2024,6 +2026,7 @@
 			exportExcel : function ( data )
 			{
 				// Creates a HTML table to be exported.
+				/*
 				const renderTable = () =>
 				{
 					let table = '<table><thead>';
@@ -2080,14 +2083,18 @@
 
 					excelExportArea.document.execCommand( "SaveAs",true,"Data_Export.xls" );
 				}
-				else
-				{
+				*/
+				//else
+				//{
 					//window.open( 'data:application/vnd.ms-excel,' + encodeURIComponent( renderTable() ) );
-					var xls = this.jsonToXLS(data);
-					//alert(xls);
-					var blob = this.base64ToBlob(xls, 'application/vnd.ms-excel');
-					download(blob, this.setting.title + '.xls', 'application/vnd.ms-excel');
-				}
+					var ws = XLSX.utils.aoa_to_sheet(this.jsonToArrayArray(data));
+					var wb = XLSX.utils.book_new() 
+					XLSX.utils.book_append_sheet(wb, ws, "Лист 1")
+					XLSX.writeFile(wb, this.setting.title + '.xlsx');
+					//var xls = this.jsonToXLS(data);
+					//var blob = this.base64ToBlob(xls, 'application/vnd.ms-excel');
+					//download(blob, this.setting.title + '.xls', 'application/vnd.ms-excel');
+				//}
 			},
 			/*
 			convert values with newline \n characters into <br/>
@@ -2095,6 +2102,41 @@
 			valueReformattedForMultilines(value) {
 			  if (typeof(value)=="string") return(value.replace(/\n/ig,"<br/>"));
 			  else return(value);
+			},
+			jsonToArrayArray(data) {
+					var table = [];
+					var rowData = [];
+					for ( let i = 0; i < this.columns.list.length; i++ )
+					{
+						const column = this.columns.list[i];
+						if ( typeof( column.title ) === 'undefined' )
+						{
+							rowData.push(column.name);
+						}
+						else
+						{
+							rowData.push(column.title);
+						}
+					}
+					table.push(rowData);
+					
+					for ( let i = 0; i < data.length; i++ )
+					{
+						const row = data[i];
+						rowData = [];
+
+						for ( let j = 0; j < this.columns.list.length; j++ )
+						{
+							const column = this.columns.list[j];
+
+							rowData.push(this.valueReformattedForMultilines(row[column.name]));
+						}
+
+						table.push(rowData);
+					}
+
+					return table;
+				
 			},
 			jsonToXLS(data) {
 				  let xlsTemp =
