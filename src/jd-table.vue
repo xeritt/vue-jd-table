@@ -512,6 +512,7 @@
 </template>
 
 <script>
+	import download from "downloadjs";
 	export default
 	{
 		name : 'JDTable',
@@ -1058,6 +1059,11 @@
 			{
 				type    : Boolean,
 				default : true
+			},
+			
+			worksheet: {
+				type: String, 
+				default: "Sheet1"
 			}
 		},
 
@@ -1115,6 +1121,17 @@
 
 		methods :
 		{
+		    base64ToBlob(data, mime) {
+				  let base64 = window.btoa(window.unescape(encodeURIComponent(data)));
+				  let bstr = atob(base64);
+				  let n = bstr.length;
+				  let u8arr = new Uint8ClampedArray(n);
+				  while (n--) {
+					u8arr[n] = bstr.charCodeAt(n);
+				  }
+				  return new Blob([u8arr], { type: mime });
+			},
+			
 			// Polyfills the element function "closest" (IE11).
 			polyfillClosest : function ()
 			{
@@ -2010,15 +2027,11 @@
 				const renderTable = () =>
 				{
 					let table = '<table><thead>';
-
 					table += '<tr>';
-
 					for ( let i = 0; i < this.columns.list.length; i++ )
 					{
 						const column = this.columns.list[i];
-
 						table += '<th>';
-
 						if ( typeof( column.title ) === 'undefined' )
 						{
 							table += column.name;
@@ -2027,12 +2040,9 @@
 						{
 							table += column.title;
 						}
-
 						table += '</th>';
 					}
-
 					table += '</tr>';
-
 					table += '</thead><tbody>';
 
 					for ( let i = 0; i < data.length; i++ )
@@ -2072,8 +2082,54 @@
 				}
 				else
 				{
-					window.open( 'data:application/vnd.ms-excel,' + encodeURIComponent( renderTable() ) );
+					//window.open( 'data:application/vnd.ms-excel,' + encodeURIComponent( renderTable() ) );
+					var blob = this.base64ToBlob(this.jsonToXLS(data), 'application/vnd.ms-excel');
+					download(blob, this.setting.title + '.xls', 'application/vnd.ms-excel');
 				}
+			},
+			jsonToXLS(data) {
+				  let xlsTemp =
+					'<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta name=ProgId content=Excel.Sheet> <meta name=Generator content="Microsoft Excel 11"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>${worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><style>br {mso-data-placement: same-cell;}</style></head><body><table>${table}</table></body></html>';
+				  	let table = '<thead>';
+					table += '<tr>';
+					for ( let i = 0; i < this.columns.list.length; i++ )
+					{
+						const column = this.columns.list[i];
+						table += '<th>';
+						if ( typeof( column.title ) === 'undefined' )
+						{
+							table += column.name;
+						}
+						else
+						{
+							table += column.title;
+						}
+						table += '</th>';
+					}
+					table += '</tr>';
+					table += '</thead><tbody>';
+					for ( let i = 0; i < data.length; i++ )
+					{
+						const row = data[i];
+
+						table += '<tr>';
+
+						for ( let j = 0; j < this.columns.list.length; j++ )
+						{
+							const column = this.columns.list[j];
+
+							table += '<td>';
+							table += row[column.name];
+							table += '</td>';
+						}
+
+						table += '</tr>';
+					}
+
+					table += '</tbody></table>'
+				
+				  let xlsData = table;
+				  return xlsTemp.replace("${table}", xlsData).replace("${worksheet}", this.worksheet);
 			},
 
 			// Processes the raw data through filters/search. This returns a promise.
