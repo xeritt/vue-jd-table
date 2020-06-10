@@ -2133,7 +2133,7 @@
 						table += '</tr>';
 					}
 
-					table += '</tbody></table>'
+					table += '</tbody>'
 				
 				  let xlsData = table;
 				  return xlsTemp.replace("${table}", xlsData).replace("${worksheet}", this.worksheet);
