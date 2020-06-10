@@ -2087,6 +2087,13 @@
 					download(blob, this.setting.title + '.xls', 'application/vnd.ms-excel');
 				}
 			},
+			/*
+			convert values with newline \n characters into <br/>
+			*/
+			valueReformattedForMultilines(value) {
+			  if (typeof(value)=="string") return(value.replace(/\n/ig,"<br/>"));
+			  else return(value);
+			},
 			jsonToXLS(data) {
 				  let xlsTemp =
 					'<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta name=ProgId content=Excel.Sheet> <meta name=Generator content="Microsoft Excel 11"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>${worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><style>br {mso-data-placement: same-cell;}</style></head><body><table>${table}</table></body></html>';
@@ -2119,7 +2126,7 @@
 							const column = this.columns.list[j];
 
 							table += '<td>';
-							table += row[column.name];
+							table += this.valueReformattedForMultilines(row[column.name]);
 							table += '</td>';
 						}
 
