@@ -344,11 +344,11 @@
 			<div v-if="noDataMessage" class="jd-layerPopup jd-contentFrame">
 				<div class="jd-noDataFrame">
 					<div class="jd-title">
-						No Data Available
+						{{ tr['NoDataAvailable'] }}
 					</div>
 
 					<div v-if="filtering" class="jd-filters">
-						Try changing your applied filters.
+						{{ tr['Tryfilters'] }}.
 					</div>
 				</div>
 			</div>
@@ -424,7 +424,7 @@
 							</span>
 						</div>
 
-						<div class="jd-controlTitle">Quick View</div>
+						<div class="jd-controlTitle">{{ tr['QuickView'] }}</div>
 
 						<div class="jd-controlAction">
 							<span v-if="setting.deleteItem" @click="featureAction('DeleteItem')">
@@ -482,28 +482,28 @@
 			<div v-show="( setting.contextMenuLeft || setting.contextMenuRight ) && status.contextMenu" class="jd-contextMenu" ref="jd_contextMenu">
 				<ul class="jd-contextMenuOptions">
 					<li v-if="setting.contextMenuQuickView || setting.contextMenuView || setting.contextMenuEdit || setting.contextMenuDelete" class="jd-contextMenuHeader jd-noneSelectable">
-						<span>Row Options</span>
+						<span>{{ tr['RowOptions'] }}</span>
 					</li>
 					<li v-if="setting.contextMenuQuickView" @click="contextQuickView" class="jd-contextMenuOption jd-noneSelectable" :title="tr['OpenQuickView']">
-						<span>Quick View</span>
+						<span>{{ tr['QuickView'] }}</span>
 					</li>
 					<li v-if="setting.contextMenuView"  class="jd-contextMenuOption jd-noneSelectable">
 						<span @click="contextView(false)" :title="tr['ViewRecord']">{{ tr['ViewRecord'] }}</span>
-						<span @click="contextView(true)" title="View (In New Window)"><i class="fas fa-external-link-alt"></i></span>
+						<span @click="contextView(true)" :title="tr['ViewInNewWindow']"><i class="fas fa-external-link-alt"></i></span>
 					</li>
 					<li v-if="setting.contextMenuEdit" class="jd-contextMenuOption jd-noneSelectable">
 						<span @click="contextEdit(false)" :title="tr['EditRecord']">{{ tr['EditRecord'] }}</span>
-						<span @click="contextEdit(true)" title="Edit (In New Window)"><i class="fas fa-external-link-alt"></i></span>
+						<span @click="contextEdit(true)" :title="tr['EditInNewWindow']"><i class="fas fa-external-link-alt"></i></span>
 					</li>
 					<li v-if="setting.contextMenuDelete" class="jd-contextMenuOption jd-noneSelectable">
 						<span @click="contextDelete" :title="tr['DeleteRecord']"> {{ tr['DeleteRecord'] }}</span>
 					</li>
 					<li v-if="setting.contextMenuAdd" class="jd-contextMenuHeader jd-noneSelectable">
-						<span>Table Options</span>
+						<span>{{ tr['TableOptions'] }}</span>
 					</li>
 					<li v-if="setting.contextMenuAdd" class="jd-contextMenuOption jd-noneSelectable">
 						<span @click="contextAdd(false)" :title="tr['AddRecord']">Add</span>
-						<span @click="contextAdd(true)" title="Add (In New Window)"><i class="fas fa-external-link-alt"></i></span>
+						<span @click="contextAdd(true)" :title="tr['AddInNewWindow']"><i class="fas fa-external-link-alt"></i></span>
 					</li>
 				</ul>
 			</div>
@@ -549,7 +549,15 @@
 					PreviousPage: 'Предыдущая страница',
 					NextPage: 'Следующая страница',
 					LastPage: 'Последняя страница',
-					Value: 'Значение'
+					Value: 'Значение',
+					RowOptions:'Параметры строки',
+					QuickView: 'Быстрый просмотр',
+					TableOptions:'Параметры таблицы',
+					ViewInNewWindow:'Просмотр в новом окне',
+					EditInNewWindow:'Редактировать в новом окне',
+					AddInNewWindow:'Добавить в новов окне',
+					NoDataAvailable:'Данные недоступны',
+					Tryfilters:'Попробуйте изменить применяемые фильтры.'
 				},
 				status :
 				{
